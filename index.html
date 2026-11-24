@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>学Cube · 3D 有色磨砂玻璃魔方教学</title>
+  </head>
+  <body>
+    <div id="canvas-container" aria-label="3D 有色磨砂玻璃三阶魔方画布"></div>
+
+    <header class="top-bar">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 2.75 4.25 7.25v9.5L12 21.25l7.75-4.5v-9.5L12 2.75Z" />
+          <path d="M12 12 4.25 7.25" />
+          <path d="M12 12l7.75-4.75" />
+          <path d="M12 12v9.25" />
+        </svg>
+        <span class="brand-title">学Cube</span>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-subtitle">三阶魔方教学</span>
+      </div>
+
+      <div class="top-actions">
+        <div class="mode-switch" role="tablist" aria-label="模式切换">
+          <button id="btn-mode-free" class="mode-btn is-active" type="button" role="tab" aria-selected="true">自由玩</button>
+          <button id="btn-mode-teach" class="mode-btn" type="button" role="tab" aria-selected="false">教学还原</button>
+        </div>
+
+        <button id="btn-basics" class="top-pill-btn" type="button">基础课</button>
+
+        <button id="btn-help" class="help-btn" type="button" title="操作说明" aria-label="打开操作说明">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.5" />
+            <path d="M9.75 9.25a2.35 2.35 0 0 1 4.45.9c0 1.45-2.2 1.85-2.2 3.1" />
+            <circle cx="12" cy="16.75" r="0.6" fill="currentColor" stroke="none" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <aside id="teaching-panel" class="teaching-panel" hidden aria-label="层先法教学面板">
+      <div class="teaching-panel-header">
+        <div class="teaching-panel-title">
+          <span class="teaching-dot"></span>
+          <span>教学还原助手</span>
+        </div>
+        <button id="btn-teaching-close" class="modal-close" type="button" aria-label="关闭教学面板">×</button>
+      </div>
+      <div id="teaching-panel-body" class="teaching-panel-body"></div>
+    </aside>
+
+    <div class="bottom-dock">
+      <div class="toolbar-pill" role="toolbar" aria-label="魔方工具栏">
+        <div class="action-group">
+          <button id="btn-scramble" class="action-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 3h5v5" />
+              <path d="M4 20 21 3" />
+              <path d="M21 16v5h-5" />
+              <path d="M15 15l6 6" />
+              <path d="M4 4l5 5" />
+            </svg>
+            <span>打乱</span>
+          </button>
+
+          <button id="btn-solve-teach" class="action-btn is-accent" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3 2 8l10 5 10-5-10-5Z" />
+              <path d="M6 10.5v5.5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5" />
+            </svg>
+            <span>教我还原</span>
+          </button>
+
+          <button id="btn-undo" class="action-btn" type="button" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 14 4 9l5-5" />
+              <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
+            </svg>
+            <span>撤销</span>
+          </button>
+
+          <button id="btn-reset" class="action-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>重置</span>
+          </button>
+
+          <button id="btn-screenshot" class="action-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2.5" />
+              <circle cx="9" cy="10" r="1.5" />
+              <path d="m21 15-4.5-4.5L9 18" />
+            </svg>
+            <span>截图</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="hint-caption">拖动表面旋转 · 拖动空白旋转视角</p>
+    </div>
+
+    <aside class="status-corner" aria-live="polite">
+      <span class="status-indicator is-solved" id="status-dot"></span>
+      <span id="status-label">已还原</span>
+      <span class="status-sep" aria-hidden="true"></span>
+      <span id="moves-label">0 步</span>
+      <span class="status-sep" aria-hidden="true"></span>
+      <span id="timer-label">00:00</span>
+    </aside>
+
+    <div id="basics-modal" class="modal-backdrop" hidden>
+      <div class="modal-card modal-wide" role="dialog" aria-modal="true" aria-labelledby="basics-modal-title">
+        <div class="modal-header">
+          <h2 id="basics-modal-title">魔方入门基础课 · 层先法整体思路</h2>
+          <button id="btn-basics-close" class="modal-close" type="button" aria-label="关闭基础课弹窗">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="help-section">
+            <h3>1. 认识魔方的三种块</h3>
+            <ul>
+              <li><strong>中心块（6 个，单色）</strong>：相对位置永远固定，决定了每一面最终应该还原成什么颜色（如顶面紫色、底面黄色）。</li>
+              <li><strong>棱块（12 个，双色）</strong>：位于每条边中间，只能在棱块位置间移动。</li>
+              <li><strong>角块（8 个，三色）</strong>：位于八个顶点，只能在角块位置间移动。</li>
+            </ul>
+          </div>
+          <div class="help-section">
+            <h3>2. 读懂国际标准公式字母</h3>
+            <div class="shortcut-grid">
+              <span><kbd>U</kbd> / <kbd>D</kbd></span><span>顶层（紫） / 底层（黄）顺时针 90°</span>
+              <span><kbd>F</kbd> / <kbd>B</kbd></span><span>前层（绿） / 后层（蓝）顺时针 90°</span>
+              <span><kbd>R</kbd> / <kbd>L</kbd></span><span>右层（红） / 左层（橙）顺时针 90°</span>
+              <span><kbd>'</kbd>（撇号）</span><span>表示该面<strong>逆时针</strong>旋转 90°（如 R'）</span>
+              <span><kbd>2</kbd>（数字 2）</span><span>表示该面连续旋转 <strong>180°</strong>（如 U2）</span>
+            </div>
+          </div>
+          <div class="help-section">
+            <h3>3. 整体还原心法（层先法 7 步）</h3>
+            <p class="basics-note">
+              由下至上逐层封顶：<strong>①底层十字 → ②底层四角 → ③中层四棱 → ④顶层十字 → ⑤顶面全紫 → ⑥顶层四角 → ⑦顶层四棱</strong>。所有中后期公式的核心原理都是「临时借位 → 换块/翻色 → 原路归位」，绝不破坏已经拼好的下层。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="help-modal" class="modal-backdrop" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+        <div class="modal-header">
+          <h2 id="help-modal-title">操作说明</h2>
+          <button id="btn-help-close" class="modal-close" type="button" aria-label="关闭弹窗">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="help-section">
+            <h3>鼠标 / 触控</h3>
+            <ul>
+              <li><strong>拖动魔方表面</strong>：沿拖拽方向拧动对应层 90°</li>
+              <li><strong>拖动空白区域</strong>：360° 旋转观察视角</li>
+              <li><strong>滚轮 / 双指捏合</strong>：缩放视图距离</li>
+            </ul>
+          </div>
+          <div class="help-section">
+            <h3>键盘快捷键</h3>
+            <div class="shortcut-grid">
+              <span><kbd>U</kbd> / <kbd>D</kbd></span><span>顶层 / 底层顺时针</span>
+              <span><kbd>L</kbd> / <kbd>R</kbd></span><span>左层 / 右层顺时针</span>
+              <span><kbd>F</kbd> / <kbd>B</kbd></span><span>前层 / 后层顺时针</span>
+              <span><kbd>Shift</kbd> + 字母</span><span>对应层逆时针旋转</span>
+              <span><kbd>Z</kbd></span><span>撤销上一步</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
